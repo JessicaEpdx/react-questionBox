@@ -2,21 +2,16 @@
     {
         "author": "Pete Hunt",
         "text": "Hey there!",
-        "answered": false
+        "answered": "false"
     },
     {
         "author": "Paul O’Shannessy",
         "text": "React is *great*!",
-        "answered": false
-    },
-    {
-        "author": "fefew",
-        "text": "fewefw",
         "answered": "false"
     },
     {
-        "author": "fewewf",
-        "text": "fewef",
+        "author": "Jessica",
+        "text": "How can I make this server dynamic!?",
         "answered": "false"
     }
 ]
