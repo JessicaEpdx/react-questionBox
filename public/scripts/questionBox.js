@@ -2,8 +2,8 @@ var QuestionBox = React.createClass({
   getInitialState: function() {
     return {
       data:[
-      {author: "Pete Hunt", text: "This is one comment"},
-      {author: "Jordan Walke", text: "This is *another* comment"}
+      {author: "Pete Hunt", text: "This is one question", answered: false, id:1},
+      {author: "Jordan Walke", text: "This is *another* question", answered: false, id:2}
       ]
     };
   },
@@ -15,7 +15,7 @@ var QuestionBox = React.createClass({
       return;
     };
     this.setState({
-      data: this.state.data.concat({author: authorInput, text: questionInput})
+      data: this.state.data.concat({author: authorInput, text: questionInput, id: this.state.data.length + 1, answered: false})
     });
 
   },
@@ -37,7 +37,7 @@ var QuestionList = React.createClass({
       this.props.commentData.map(function(question){
         return(
           <div>
-          <Question author={question.author} text={question.text} />
+          <Question author={question.author} text={question.text} id={question.id} />
           </div>
         )
       });
@@ -79,10 +79,10 @@ var QuestionForm = React.createClass({
       <div className="questionForm">
         <form onSubmit={this.handleSubmit} className="well questionForm">
           <label>Question Author</label><br />
-          <input type="text" ref="authorInput" /><br />
+          <input type="text" ref="authorInput" className="form-control" /><br />
           <label>Whats Your Question?</label><br />
-          <input type="text" ref="questionInput" />
-          <input type="submit" value="Ask!" className="btn btn-warning"></input>
+          <input type="text" ref="questionInput" className="form-control" />
+          <input type="submit" value="Ask Away!" className="btn btn-warning"></input>
         </form>
       </div>
     );
