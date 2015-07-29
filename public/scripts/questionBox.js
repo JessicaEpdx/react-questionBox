@@ -1,21 +1,48 @@
 var QuestionBox = React.createClass({
+  loadCommentsFromServer: function() {
+    $.ajax({
+      url:this.props.url,
+      dataType: 'json',
+      cache: false,
+      success: function(data) {
+        this.setState({data: data});
+      }.bind(this),
+      error: function(xhr, status, error) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+
   getInitialState: function() {
     return {
-      data:[
-      {author: "Pete Hunt", text: "This is one question", answered: false, id:1},
-      {author: "Jordan Walke", text: "This is *another* question", answered: false, id:2}
-      ]
+      data:[]
     };
   },
 
-  createQuestion: function(input) {
-    var authorInput = input[0];
-    var questionInput = input[1];
-    if (!authorInput || !questionInput){
-      return;
-    };
-    this.setState({
-      data: this.state.data.concat({author: authorInput, text: questionInput, id: this.state.data.length + 1, answered: false})
+  componentDidMount: function() {
+    this.loadCommentsFromServer();
+    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+  },
+
+  createQuestion: function(question) {
+    var questions = this.state.data;
+    questions.push(question);
+    this.setState({data: questions}, function() {
+      // `setState` accepts a callback. To avoid (improbable) race condition,
+      // `we'll send the ajax request right after we optimistically set the new
+      // `state.
+      $.ajax({
+        url: this.props.url,
+        dataType: 'json',
+        type: 'POST',
+        data: question,
+        success: function(data) {
+          this.setState({data: data});
+        }.bind(this),
+        error: function(xhr, status, err) {
+          console.error(this.props.url, status, err.toString());
+        }.bind(this)
+      });
     });
 
   },
@@ -68,9 +95,13 @@ var Question = React.createClass({
 var QuestionForm = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var author = React.findDOMNode(this.refs.authorInput).value.trim();
-    var question = React.findDOMNode(this.refs.questionInput).value.trim();
-    this.props.createQuestion([author, question]);
+    var authorInput = React.findDOMNode(this.refs.authorInput).value.trim();
+    var questionInput = React.findDOMNode(this.refs.questionInput).value.trim();
+    if (!authorInput || !questionInput) {
+      return;
+    }
+
+    this.props.createQuestion({author: authorInput, text: questionInput, answered: false});
     React.findDOMNode(this.refs.authorInput).value = ""
     React.findDOMNode(this.refs.questionInput).value = ""
   },
@@ -90,6 +121,6 @@ var QuestionForm = React.createClass({
 });
 
 React.render(
-<QuestionBox />,
+<QuestionBox url='questions.json' pollInterval={2000}/>,
   document.getElementById('questionBox')
 )

@@ -1,0 +1,22 @@
+[
+    {
+        "author": "Pete Hunt",
+        "text": "Hey there!",
+        "answered": false
+    },
+    {
+        "author": "Paul O’Shannessy",
+        "text": "React is *great*!",
+        "answered": false
+    },
+    {
+        "author": "fefew",
+        "text": "fewefw",
+        "answered": "false"
+    },
+    {
+        "author": "fewewf",
+        "text": "fewef",
+        "answered": "false"
+    }
+]
